@@ -123,6 +123,23 @@ public class Superbowl implements Comparable<Superbowl> {
 	public void setPointDifference(int pointDifference) {
 		this.pointDifference = pointDifference;
 	}
+	
+	public int getValue(Fields field)
+	{
+		switch(field)
+		{
+			case Attendance:
+				return attendance;
+			case WinningPoints:
+				return winningPoints;
+			case LosingPoints:
+				return losingPoints;
+			case PointDifference:
+				return pointDifference;
+			default:
+				return 0;
+		}
+	}
 
 	/*public String toString(Superbowl event) {
 		StringBuilder build = new StringBuilder();

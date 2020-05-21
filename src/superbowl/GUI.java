@@ -4,6 +4,7 @@ import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.Collections;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -31,11 +32,13 @@ public class GUI extends JFrame implements ActionListener{
 	private JScrollPane scrollPane;
 	private DefaultTableModel tm;
 	private JLabel sortLabel;
+	private String[] sortOptions = {"Attendance", "Winning Points", "Losing Points", "Stadium", "City", "State", "Point Difference"};
 	private JComboBox sortComboB;
 
 	/**
 	 * Create the frame.
 	 */
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public GUI(ArrayList<Superbowl> events) {
 		super("Superbowl");
 		this.events = events;
@@ -78,7 +81,65 @@ public class GUI extends JFrame implements ActionListener{
 		allPanel.add(sortLabel);
 		
 		sortComboB = new JComboBox();
-		sortComboB.setModel(new DefaultComboBoxModel(new String[] {"Attendance", "Winning Points", "Losing Points", "Stadium", "City", "State", "Point Difference"}));
+		sortComboB.setName("");
+		sortComboB.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				String dropDownValue = sortComboB.getSelectedItem().toString();
+				switch(dropDownValue)
+				{
+					case "Attendance":
+						Collections.sort(events, new AttendanceCompare());
+						drawTable();
+						table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
+						resizeColumnWidth(table);
+						revalidate();
+						break;
+					case "Winning Points":
+						Collections.sort(events, new WinningPointsCompare());
+						drawTable();
+						table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
+						resizeColumnWidth(table);
+						revalidate();
+						break;
+					case "Losing Points":
+						Collections.sort(events, new LosingPointsCompare());
+						drawTable();
+						table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
+						resizeColumnWidth(table);
+						revalidate();
+						break;
+					case "Stadium":
+						Collections.sort(events, new StadiumCompare());
+						drawTable();
+						table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
+						resizeColumnWidth(table);
+						revalidate();
+						break;
+					case "City":
+						Collections.sort(events, new CityCompare());
+						drawTable();
+						table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
+						resizeColumnWidth(table);
+						revalidate();
+						break;
+					case "State":
+						Collections.sort(events, new StateCompare());
+						drawTable();
+						table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
+						resizeColumnWidth(table);
+						revalidate();
+						break;
+					case "Point Difference":
+						Collections.sort(events, new PointDifferenceCompare());
+						drawTable();
+						table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
+						resizeColumnWidth(table);
+						revalidate();
+						break;
+				}
+			}
+		});
+		sortComboB.setModel(new DefaultComboBoxModel(sortOptions));
 		sortComboB.setBounds(77, 11, 151, 27);
 		allPanel.add(sortComboB);
 		

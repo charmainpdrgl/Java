@@ -10,6 +10,7 @@ import java.time.Year;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Scanner;
 
 public class SuperbowlReader {
@@ -68,12 +69,13 @@ public class SuperbowlReader {
 					events.add(new Superbowl(date1, eventAttendance, winner, eventWin, loser, eventLose, mvp, stadium,
 							city, state, eventPointDif));
 
-					for (String item : fields) {
+					/*for (String item : fields) {
 						count++;
 						System.out.println(item);
-					}
+					}*/
 
-					// Collections.sort(events);
+					//Collections.sort(events);
+					//Collections.sort(events, new AttendanceCompare());
 
 				} catch (NumberFormatException ne) {
 					System.out.println("Not a number " + ne);
