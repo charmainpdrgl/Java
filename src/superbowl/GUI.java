@@ -14,6 +14,13 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumnModel;
+
+import org.jfree.chart.ChartFactory;
+import org.jfree.chart.ChartPanel;
+import org.jfree.chart.JFreeChart;
+import org.jfree.chart.plot.PlotOrientation;
+import org.jfree.data.category.DefaultCategoryDataset;
+
 import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.JLabel;
@@ -86,6 +93,7 @@ public class GUI extends JFrame implements ActionListener{
 	private JTextField maxScoreText;
 	private JTextField averageText;
 	private JButton statsButton;
+	private JTabbedPane barPane;
 
 	/**
 	 * Create the frame.
@@ -210,20 +218,62 @@ public class GUI extends JFrame implements ActionListener{
 		showResultsButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				boolean found = false;
-				int winnerCounter = 0;
-				
+				int count = 0;
+				Object[] object = new Object[11];
+				tm.setRowCount(0);
 				for(int j = 0; j<events.size();j++)
 				{
-					
-					if(events.get(j).getWinner().equalsIgnoreCase(searchText.getText()))
+					if(searchText.getText().equalsIgnoreCase(events.get(j).getWinner()))
+					{
+						count++;
+						found = true;
+						
+						for (int i=0;i<count;i++)
 						{
-							winnerCounter++;
+							object[0] = events.get(j).getDate();
+							object[1] = events.get(j).getAttendance();
+							object[2] = events.get(j).getWinner();
+							object[3] = events.get(j).getWinningPoints();
+							object[4] = events.get(j).getLoser();
+							object[5] = events.get(j).getLosingPoints();
+							object[6] = events.get(j).getMvp();
+							object[7] = events.get(j).getStadium();
+							object[8] = events.get(j).getCity();
+							object[9] = events.get(j).getState();
+							object[10] = events.get(j).getPointDifference();
 						}
+						tm.addRow(object);
+					}
+					else if(searchText.getText().equalsIgnoreCase(events.get(j).getLoser()))
+					{
+						count++;
+						found = true;
+						
+						for (int i=0;i<count;i++)
+						{
+							object[0] = events.get(j).getDate();
+							object[1] = events.get(j).getAttendance();
+							object[2] = events.get(j).getWinner();
+							object[3] = events.get(j).getWinningPoints();
+							object[4] = events.get(j).getLoser();
+							object[5] = events.get(j).getLosingPoints();
+							object[6] = events.get(j).getMvp();
+							object[7] = events.get(j).getStadium();
+							object[8] = events.get(j).getCity();
+							object[9] = events.get(j).getState();
+							object[10] = events.get(j).getPointDifference();
+						}
+						tm.addRow(object);
+					}
+					else
+					{
+						found = false;
+						
+					}
 				}
-				
-				
-				
-
+				table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
+				resizeColumnWidth(table);
+				revalidate();
 			}
 		});
 		showResultsButton.setBounds(1111, 26, 117, 29);
@@ -496,6 +546,12 @@ public class GUI extends JFrame implements ActionListener{
 		});
 		statsButton.setBounds(250, 19, 167, 29);
 		statsPanel.add(statsButton);
+		barGraph();
+	}
+	
+	public void notFound()
+	{
+		JOptionPane.showMessageDialog(null, "No Results Found.");
 	}
 	
 	public void drawTable()
@@ -534,6 +590,20 @@ public class GUI extends JFrame implements ActionListener{
 	            width=300;
 	        columnModel.getColumn(column).setPreferredWidth(width);
 	    }
+	}
+	
+	public void barGraph()
+	{
+		DefaultCategoryDataset data = new DefaultCategoryDataset();
+		
+		for(int i = 0; i < events.size();i++)
+		{
+			data.setValue(events.get(i).getPointDifference(), "Point Difference", events.get(i).getDate());
+		}
+		
+		JFreeChart chart = ChartFactory.createBarChart("Superbowl Point Difference Comparison","years (1967 to 2018)","point difference", data, PlotOrientation.VERTICAL,false, true, false );
+		ChartPanel mypanel = new ChartPanel(chart);
+		tabbedPane.add("Bar Graph", mypanel);
 	}
 
 	@Override
