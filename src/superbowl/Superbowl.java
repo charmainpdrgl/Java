@@ -16,6 +16,7 @@ public class Superbowl implements Comparable<Superbowl> {
 	private String city;
 	private String state;
 	private int pointDifference;
+	boolean win = false;
 
 	public Superbowl(LocalDate date, int attendance, String winner, int winningPoints, String loser, int losingPoints,
 			String mvp, String stadium, String city, String state, int pointDifference) {
@@ -49,9 +50,10 @@ public class Superbowl implements Comparable<Superbowl> {
 	}
 
 	public int getWinningPoints() {
+
 		return winningPoints;
 	}
-
+	
 	public String getLoser() {
 		return loser;
 	}
@@ -140,57 +142,6 @@ public class Superbowl implements Comparable<Superbowl> {
 				return 0;
 		}
 	}
-
-	/*public String toString(Superbowl event) {
-		StringBuilder build = new StringBuilder();
-
-		if (this.date.equals(event.getDate())) {
-			build.append(date.toString());
-		}
-
-		if (this.attendance == event.getAttendance()) {
-			build.append(Integer.toString(attendance));
-		}
-
-		if (this.winner.equals(event.getWinner())) {
-			build.append(winner.toString());
-		}
-
-		if (this.winningPoints == event.getWinningPoints()) {
-			build.append(Integer.toString(winningPoints));
-		}
-
-		if (this.loser.equals(event.getLoser())) {
-			build.append(loser.toString());
-		}
-
-		if (this.losingPoints == event.getLosingPoints()) {
-			build.append(Integer.toString(losingPoints));
-		}
-
-		if (this.mvp.equals(event.getMvp())) {
-			build.append(mvp.toString());
-		}
-
-		if (this.stadium.equals(event.getStadium())) {
-			build.append(stadium.toString());
-		}
-
-		if (this.city.equals(event.getCity())) {
-			build.append(city.toString());
-		}
-
-		if (this.state.equals(event.getState())) {
-			build.append(state.toString());
-		}
-
-		if (this.pointDifference == event.getPointDifference()) {
-			build.append(Integer.toString(pointDifference));
-		}
-
-		//System.out.println(build.toString());
-		return build.toString();
-	}*/
 
 	@Override
 	public int compareTo(Superbowl e1) {

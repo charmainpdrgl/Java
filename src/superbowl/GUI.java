@@ -1,6 +1,7 @@
 package superbowl;
 
 import java.awt.Component;
+import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -16,19 +17,24 @@ import javax.swing.table.TableColumnModel;
 import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JComboBox;
+import javax.swing.JDialog;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JTextField;
 import javax.swing.JButton;
+import java.awt.Color;
+import java.util.*;
+import javax.swing.border.TitledBorder;
 
 public class GUI extends JFrame implements ActionListener{
 
 	private ArrayList<Superbowl> events;
+	
 	private JPanel contentPane;
 	private JTabbedPane tabbedPane;
 	private JPanel allPanel;
-	private JPanel historyPanel;
-	private JPanel searchPanel;
+	private JPanel teamsPanel;
 	private JPanel statsPanel;
 	private JTable table;
 	private JScrollPane scrollPane;
@@ -46,13 +52,11 @@ public class GUI extends JFrame implements ActionListener{
 	private JLabel losingTeamLabel;
 	private JLabel winnerPhotoLabel;
 	private JPanel winnerPanel;
-	private JLabel wNameLabel;
-	private JLabel wPointsLabel;
-	private JLabel wMVPLabel;
+	private JLabel mvpLabel;
 	private JPanel loserPanel;
 	private JLabel loserPhotoLabel;
-	private JLabel lNameLabel;
-	private JLabel lPointsLabel;
+	private JLabel nameLabel;
+	private JLabel pointsLabel;
 	private JTextField wNameText;
 	private JTextField wPointText;
 	private JTextField wMVPText;
@@ -61,6 +65,27 @@ public class GUI extends JFrame implements ActionListener{
 	private JButton previousButton;
 	private JButton nextButton;
 	private int counter = 0;
+	private JLabel searchLabel;
+	private JTextField searchText;
+	private JButton showResultsButton;
+	private JDialog results;
+	private JFrame resultFrame;
+	private JButton b;
+	private int max;
+	private JPanel panel;
+	private JLabel totalLabel;
+	private JLabel minAttendanceLabel;
+	private JLabel maxAttendanceLabel;
+	private JLabel minScoreLabel;
+	private JLabel maxScoreLabel;
+	private JLabel averageLabel;
+	private JTextField totalGamesText;
+	private JTextField minAttendanceText;
+	private JTextField maxAttendanceText;
+	private JTextField minScoreText;
+	private JTextField maxScoreText;
+	private JTextField averageText;
+	private JButton statsButton;
 
 	/**
 	 * Create the frame.
@@ -69,22 +94,6 @@ public class GUI extends JFrame implements ActionListener{
 	public GUI(ArrayList<Superbowl> events) {
 		super("Superbowl");
 		this.events = events;
-		
-		Object[] object = new Object[11];
-		for (int i=0;i<counter;i++)
-		{
-			object[0] = events.get(i).getDate();
-			object[1] = events.get(i).getAttendance();
-			object[2] = events.get(i).getWinner();
-			object[3] = events.get(i).getWinningPoints();
-			object[4] = events.get(i).getLoser();
-			object[5] = events.get(i).getLosingPoints();
-			object[6] = events.get(i).getMvp();
-			object[7] = events.get(i).getStadium();
-			object[8] = events.get(i).getCity();
-			object[9] = events.get(i).getState();
-			object[10] = events.get(i).getPointDifference();
-		}
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 1440, 586);
@@ -102,7 +111,7 @@ public class GUI extends JFrame implements ActionListener{
 		allPanel.setLayout(null);
 		
 		scrollPane = new JScrollPane();
-		scrollPane.setBounds(6, 43, 1397, 457);
+		scrollPane.setBounds(6, 80, 1397, 420);
 		allPanel.add(scrollPane);
 		
 		table = new JTable();
@@ -120,7 +129,7 @@ public class GUI extends JFrame implements ActionListener{
 		resizeColumnWidth(table);
 		
 		sortLabel = new JLabel("SORT BY:");
-		sortLabel.setBounds(18, 15, 61, 16);
+		sortLabel.setBounds(385, 31, 61, 16);
 		allPanel.add(sortLabel);
 		
 		sortComboB = new JComboBox();
@@ -183,120 +192,146 @@ public class GUI extends JFrame implements ActionListener{
 			}
 		});
 		sortComboB.setModel(new DefaultComboBoxModel(sortOptions));
-		sortComboB.setBounds(77, 11, 151, 27);
+		sortComboB.setBounds(444, 27, 151, 27);
 		allPanel.add(sortComboB);
 		
-		historyPanel = new JPanel();
-		tabbedPane.addTab("Event History", null, historyPanel, null);
-		historyPanel.setLayout(null);
+		searchLabel = new JLabel("SEARCH:");
+		searchLabel.setBounds(812, 31, 61, 16);
+		allPanel.add(searchLabel);
+		
+		searchText = new JTextField();
+		searchText.setForeground(Color.LIGHT_GRAY);
+		searchText.setText(" type team name here...");
+		searchText.setBounds(872, 26, 203, 26);
+		allPanel.add(searchText);
+		searchText.setColumns(10);
+		
+		showResultsButton = new JButton("Show Results");
+		showResultsButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				boolean found = false;
+				int winnerCounter = 0;
+				
+				for(int j = 0; j<events.size();j++)
+				{
+					
+					if(events.get(j).getWinner().equalsIgnoreCase(searchText.getText()))
+						{
+							winnerCounter++;
+						}
+				}
+				
+				
+				
+
+			}
+		});
+		showResultsButton.setBounds(1111, 26, 117, 29);
+		allPanel.add(showResultsButton);
+		
+		teamsPanel = new JPanel();
+		tabbedPane.addTab("Teams", null, teamsPanel, null);
+		teamsPanel.setLayout(null);
 		
 		dateLabel = new JLabel("Date:");
 		dateLabel.setBounds(277, 17, 61, 16);
-		historyPanel.add(dateLabel);
+		teamsPanel.add(dateLabel);
 		
 		dateText = new JTextField();
 		dateText.setEditable(false);
 		dateText.setBounds(316, 12, 105, 26);
-		historyPanel.add(dateText);
+		teamsPanel.add(dateText);
 		dateText.setColumns(10);
 		dateText.setText(events.get(0).getDate().toString());
 		
 		attendanceLabel = new JLabel("Attendance:");
 		attendanceLabel.setBounds(568, 17, 91, 16);
-		historyPanel.add(attendanceLabel);
+		teamsPanel.add(attendanceLabel);
 		
 		attendanceText = new JTextField();
 		attendanceText.setEditable(false);
 		attendanceText.setBounds(647, 12, 98, 26);
-		historyPanel.add(attendanceText);
+		teamsPanel.add(attendanceText);
 		attendanceText.setColumns(10);
 		attendanceText.setText(Integer.toString(events.get(0).getAttendance()));
 		
 		locationLabel = new JLabel("Location:");
 		locationLabel.setBounds(915, 17, 61, 16);
-		historyPanel.add(locationLabel);
+		teamsPanel.add(locationLabel);
 		
 		locationText = new JTextField();
 		locationText.setEditable(false);
 		locationText.setBounds(981, 12, 377, 26);
-		historyPanel.add(locationText);
+		teamsPanel.add(locationText);
 		locationText.setColumns(10);
 		locationText.setText(events.get(0).getStadium() + ", " + events.get(0).getCity() + ", " + events.get(0).getState());
 		
 		winningTeamLabel = new JLabel("Winning Team");
 		winningTeamLabel.setBounds(420, 89, 135, 16);
-		historyPanel.add(winningTeamLabel);
+		teamsPanel.add(winningTeamLabel);
 		
 		losingTeamLabel = new JLabel("Losing Team");
 		losingTeamLabel.setBounds(910, 89, 121, 16);
-		historyPanel.add(losingTeamLabel);
+		teamsPanel.add(losingTeamLabel);
 		
 		winnerPanel = new JPanel();
 		winnerPanel.setBounds(45, 89, 315, 273);
-		historyPanel.add(winnerPanel);
+		teamsPanel.add(winnerPanel);
 		
 		winnerPhotoLabel = new JLabel("winner");
 		winnerPanel.add(winnerPhotoLabel);
 		
-		wNameLabel = new JLabel("Name:");
-		wNameLabel.setBounds(420, 155, 61, 16);
-		historyPanel.add(wNameLabel);
-		
-		wPointsLabel = new JLabel("Points:");
-		wPointsLabel.setBounds(420, 256, 61, 16);
-		historyPanel.add(wPointsLabel);
-		
-		wMVPLabel = new JLabel("MVP:");
-		wMVPLabel.setBounds(420, 346, 61, 16);
-		historyPanel.add(wMVPLabel);
+		mvpLabel = new JLabel("MVP");
+		mvpLabel.setBounds(673, 192, 61, 16);
+		teamsPanel.add(mvpLabel);
 		
 		loserPanel = new JPanel();
 		loserPanel.setBounds(1043, 89, 315, 273);
-		historyPanel.add(loserPanel);
+		teamsPanel.add(loserPanel);
 		
 		loserPhotoLabel = new JLabel("loser");
 		loserPanel.add(loserPhotoLabel);
 		
-		lNameLabel = new JLabel("Name:");
-		lNameLabel.setBounds(782, 155, 61, 16);
-		historyPanel.add(lNameLabel);
+		nameLabel = new JLabel("Name");
+		nameLabel.setBounds(673, 122, 61, 16);
+		teamsPanel.add(nameLabel);
 		
-		lPointsLabel = new JLabel("Points:");
-		lPointsLabel.setBounds(782, 256, 61, 16);
-		historyPanel.add(lPointsLabel);
+		pointsLabel = new JLabel("Points");
+		pointsLabel.setBounds(673, 159, 61, 16);
+		teamsPanel.add(pointsLabel);
 		
 		wNameText = new JTextField();
 		wNameText.setEditable(false);
-		wNameText.setBounds(485, 150, 174, 26);
-		historyPanel.add(wNameText);
+		wNameText.setBounds(485, 117, 174, 26);
+		teamsPanel.add(wNameText);
 		wNameText.setColumns(10);
 		wNameText.setText(events.get(0).getWinner());
 		
 		wPointText = new JTextField();
 		wPointText.setEditable(false);
-		wPointText.setBounds(485, 251, 130, 26);
-		historyPanel.add(wPointText);
+		wPointText.setBounds(529, 154, 130, 26);
+		teamsPanel.add(wPointText);
 		wPointText.setColumns(10);
 		wPointText.setText(Integer.toString(events.get(0).getWinningPoints()));
 		
 		wMVPText = new JTextField();
 		wMVPText.setEditable(false);
-		wMVPText.setBounds(485, 341, 130, 26);
-		historyPanel.add(wMVPText);
+		wMVPText.setBounds(529, 187, 130, 26);
+		teamsPanel.add(wMVPText);
 		wMVPText.setColumns(10);
 		wMVPText.setText(events.get(0).getMvp());
 		
 		lNameText = new JTextField();
 		lNameText.setEditable(false);
-		lNameText.setBounds(855, 150, 176, 26);
-		historyPanel.add(lNameText);
+		lNameText.setBounds(724, 117, 176, 26);
+		teamsPanel.add(lNameText);
 		lNameText.setColumns(10);
 		lNameText.setText(events.get(0).getLoser());
 		
 		lPointText = new JTextField();
 		lPointText.setEditable(false);
-		lPointText.setBounds(855, 251, 130, 26);
-		historyPanel.add(lPointText);
+		lPointText.setBounds(724, 154, 130, 26);
+		teamsPanel.add(lPointText);
 		lPointText.setColumns(10);
 		lPointText.setText(Integer.toString(events.get(0).getLosingPoints()));
 		counter++;
@@ -335,13 +370,14 @@ public class GUI extends JFrame implements ActionListener{
 				}
 			}
 		});
-		previousButton.setBounds(568, 437, 117, 29);
-		historyPanel.add(previousButton);
+		previousButton.setBounds(568, 471, 117, 29);
+		teamsPanel.add(previousButton);
 		
 		nextButton = new JButton("Next");
 		nextButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				Object[] object = new Object[11];
+				
 				for (int i=0;i<counter+1;i++)
 				{
 					object[0] = events.get(i).getDate();
@@ -355,6 +391,7 @@ public class GUI extends JFrame implements ActionListener{
 					object[8] = events.get(i).getCity();
 					object[9] = events.get(i).getState();
 					object[10] = events.get(i).getPointDifference();
+					
 					dateText.setText(object[0].toString());
 					attendanceText.setText(object[1].toString());
 					wNameText.setText(object[2].toString());
@@ -364,6 +401,7 @@ public class GUI extends JFrame implements ActionListener{
 					wMVPText.setText(object[6].toString());
 					locationText.setText(object[7].toString() + ", " + object[8].toString() + ", " + object[9].toString());
 				}
+				
 				counter++;
 				
 				if (counter == events.size())
@@ -373,14 +411,91 @@ public class GUI extends JFrame implements ActionListener{
 				
 			}
 		});
-		nextButton.setBounds(697, 437, 117, 29);
-		historyPanel.add(nextButton);
-		
-		searchPanel = new JPanel();
-		tabbedPane.addTab("Search", null, searchPanel, null);
+		nextButton.setBounds(697, 471, 117, 29);
+		teamsPanel.add(nextButton);
 		
 		statsPanel = new JPanel();
 		tabbedPane.addTab("Statistics", null, statsPanel, null);
+		statsPanel.setLayout(null);
+		
+		panel = new JPanel();
+		panel.setBounds(105, 60, 466, 413);
+		statsPanel.add(panel);
+		panel.setLayout(null);
+		
+		totalLabel = new JLabel("Total Games");
+		totalLabel.setBounds(63, 39, 87, 16);
+		panel.add(totalLabel);
+		
+		minAttendanceLabel = new JLabel("Minimum Attendance");
+		minAttendanceLabel.setBounds(63, 109, 139, 16);
+		panel.add(minAttendanceLabel);
+		
+		maxAttendanceLabel = new JLabel("Maximum Attendance");
+		maxAttendanceLabel.setBounds(63, 151, 139, 16);
+		panel.add(maxAttendanceLabel);
+		
+		minScoreLabel = new JLabel("Minimum Game Score");
+		minScoreLabel.setBounds(63, 230, 139, 16);
+		panel.add(minScoreLabel);
+		
+		maxScoreLabel = new JLabel("Maximum Game Score");
+		maxScoreLabel.setBounds(63, 272, 139, 16);
+		panel.add(maxScoreLabel);
+		
+		averageLabel = new JLabel("Average Point Difference");
+		averageLabel.setBounds(63, 357, 172, 16);
+		panel.add(averageLabel);
+		
+		totalGamesText = new JTextField();
+		totalGamesText.setEditable(false);
+		totalGamesText.setBounds(275, 34, 130, 26);
+		panel.add(totalGamesText);
+		totalGamesText.setColumns(10);
+		
+		minAttendanceText = new JTextField();
+		minAttendanceText.setEditable(false);
+		minAttendanceText.setBounds(275, 104, 130, 26);
+		panel.add(minAttendanceText);
+		minAttendanceText.setColumns(10);
+		
+		maxAttendanceText = new JTextField();
+		maxAttendanceText.setEditable(false);
+		maxAttendanceText.setBounds(275, 146, 130, 26);
+		panel.add(maxAttendanceText);
+		maxAttendanceText.setColumns(10);
+		
+		minScoreText = new JTextField();
+		minScoreText.setEditable(false);
+		minScoreText.setBounds(275, 225, 130, 26);
+		panel.add(minScoreText);
+		minScoreText.setColumns(10);
+		
+		maxScoreText = new JTextField();
+		maxScoreText.setEditable(false);
+		maxScoreText.setBounds(275, 267, 130, 26);
+		panel.add(maxScoreText);
+		maxScoreText.setColumns(10);
+		
+		averageText = new JTextField();
+		averageText.setEditable(false);
+		averageText.setBounds(275, 352, 130, 26);
+		panel.add(averageText);
+		averageText.setColumns(10);
+		
+		statsButton = new JButton("Generate Statistics");
+		statsButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				totalGamesText.setText(Integer.toString(events.size()));
+				minAttendanceText.setText(Integer.toString(Utilities.findMinimumAttendance(events)));
+				maxAttendanceText.setText(Integer.toString(Utilities.findMaximumAttendance(events)));
+				minScoreText.setText(Integer.toString(Utilities.findLowestScore(events)));
+				maxScoreText.setText(Integer.toString(Utilities.findHighestScore(events)));
+				averageText.setText(Integer.toString(Utilities.findAveragePointDif(events)));
+			}
+		});
+		statsButton.setBounds(250, 19, 167, 29);
+		statsPanel.add(statsButton);
 	}
 	
 	public void drawTable()
