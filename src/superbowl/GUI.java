@@ -337,6 +337,8 @@ public class GUI extends JFrame implements ActionListener{
 		teamsPanel.add(winnerPanel);
 		
 		winnerPhotoLabel = new JLabel("winner");
+		winnerPhotoLabel.setForeground(Color.LIGHT_GRAY);
+		winnerPhotoLabel.setFont(new Font("Lucida Grande", Font.PLAIN, 9));
 		winnerPanel.add(winnerPhotoLabel);
 		
 		mvpLabel = new JLabel("MVP");
@@ -348,6 +350,8 @@ public class GUI extends JFrame implements ActionListener{
 		teamsPanel.add(loserPanel);
 		
 		loserPhotoLabel = new JLabel("loser");
+		loserPhotoLabel.setForeground(Color.LIGHT_GRAY);
+		loserPhotoLabel.setFont(new Font("Lucida Grande", Font.PLAIN, 9));
 		loserPanel.add(loserPhotoLabel);
 		
 		nameLabel = new JLabel("Name");
@@ -393,6 +397,15 @@ public class GUI extends JFrame implements ActionListener{
 		lPointText.setColumns(10);
 		lPointText.setText(Integer.toString(events.get(0).getLosingPoints()));
 		counter++;
+		
+		dateText.setText("");
+		attendanceText.setText("");
+		wNameText.setText("");
+		wPointText.setText("");
+		lNameText.setText("");
+		lPointText.setText("");
+		wMVPText.setText("");
+		locationText.setText("");
 		
 		previousButton = new JButton("Previous");
 		previousButton.addActionListener(new ActionListener() {
@@ -545,7 +558,7 @@ public class GUI extends JFrame implements ActionListener{
 		statsPanel.setLayout(null);
 		
 		panel = new JPanel();
-		panel.setBounds(105, 60, 466, 413);
+		panel.setBounds(475, 72, 466, 413);
 		statsPanel.add(panel);
 		panel.setLayout(null);
 		
@@ -620,7 +633,7 @@ public class GUI extends JFrame implements ActionListener{
 				averageText.setText(Integer.toString(Utilities.findAveragePointDif(events)));
 			}
 		});
-		statsButton.setBounds(250, 19, 167, 29);
+		statsButton.setBounds(620, 31, 167, 29);
 		statsPanel.add(statsButton);
 		barGraph();
 	}
