@@ -2,24 +2,26 @@ package superbowl;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.sql.Date;
-import java.text.ParseException;
 import java.time.LocalDate;
-import java.time.Month;
-import java.time.Year;
 import java.time.format.DateTimeFormatter;
-import java.time.format.FormatStyle;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Scanner;
 
+/**
+ * @author charmainpedrigal
+ *<h1>Reader Class</h1>
+ *This class is used for reading the data from a csv file onto the arraylist that
+ *was created in the App Class. This class also converts the string data into their
+ *own respective data types.
+ */
 public class SuperbowlReader {
-	
-	public SuperbowlReader()
-	{
-		
-	}
-	
+	/**
+	 * This is the method where the loading takes place.
+	 * Fields are declared to match the data into its respective categories.
+	 * The scanner class is used to go through the the csv file. And it's 
+	 * surrounded by try and catch so that if an error occurs, it can be caught.
+	 * @param events - This parameter is used to loop through.
+	 */
 	public static void load(ArrayList<Superbowl> events)
 	{
 		String date;
@@ -34,7 +36,6 @@ public class SuperbowlReader {
 		String state;
 		String pointDifference;
 		String line;
-		int count = 0;
 		// creating the File instance
 		File text = new File("SuperBowlData.csv");
 		// creating the Scanner instance
@@ -69,21 +70,9 @@ public class SuperbowlReader {
 					events.add(new Superbowl(date1, eventAttendance, winner, eventWin, loser, eventLose, mvp, stadium,
 							city, state, eventPointDif));
 
-					/*for (String item : fields) {
-						count++;
-						System.out.println(item);
-					}*/
-
-					//Collections.sort(events);
-					//Collections.sort(events, new AttendanceCompare());
-
 				} catch (NumberFormatException ne) {
 					System.out.println("Not a number " + ne);
-				} /*catch (ParseException e) {
-					// TODO Auto-generated catch block
-					System.out.println("There was a problem");
-					e.printStackTrace();
-				}*/
+				} 
 
 			}
 

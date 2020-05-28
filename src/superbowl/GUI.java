@@ -1,7 +1,6 @@
 package superbowl;
 
 import java.awt.Component;
-import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -31,13 +30,10 @@ import javax.swing.DefaultComboBoxModel;
 import javax.swing.JTextField;
 import javax.swing.JButton;
 import java.awt.Color;
-import java.util.*;
-import javax.swing.border.TitledBorder;
 
 public class GUI extends JFrame implements ActionListener{
 
 	private ArrayList<Superbowl> events;
-	
 	private JPanel contentPane;
 	private JTabbedPane tabbedPane;
 	private JPanel allPanel;
@@ -96,7 +92,8 @@ public class GUI extends JFrame implements ActionListener{
 	private JTabbedPane barPane;
 
 	/**
-	 * Create the frame.
+	 * This method creates the frame.
+	 * @param events
 	 */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public GUI(ArrayList<Superbowl> events) {
@@ -549,11 +546,9 @@ public class GUI extends JFrame implements ActionListener{
 		barGraph();
 	}
 	
-	public void notFound()
-	{
-		JOptionPane.showMessageDialog(null, "No Results Found.");
-	}
-	
+	/**
+	 * This method draws the table to display all the data.
+	 */
 	public void drawTable()
 	{
 		tm.setRowCount(0);
@@ -576,10 +571,14 @@ public class GUI extends JFrame implements ActionListener{
 		
 	}
 	
+	/**
+	 * This method helps auto resize the column depending on how long the data is.
+	 * @param table
+	 */
 	public void resizeColumnWidth(JTable table) {
 	    final TableColumnModel columnModel = table.getColumnModel();
 	    for (int column = 0; column < table.getColumnCount(); column++) {
-	        int width = 15; // Min width
+	        int width = 15;
 	        for (int row = 0; row < table.getRowCount(); row++) {
 	            TableCellRenderer renderer = table.getCellRenderer(row, column);
 	            Component comp = table.prepareRenderer(renderer, row, column);
@@ -592,6 +591,9 @@ public class GUI extends JFrame implements ActionListener{
 	    }
 	}
 	
+	/**
+	 * This method create the bar graph.
+	 */
 	public void barGraph()
 	{
 		DefaultCategoryDataset data = new DefaultCategoryDataset();
@@ -605,7 +607,7 @@ public class GUI extends JFrame implements ActionListener{
 		ChartPanel mypanel = new ChartPanel(chart);
 		tabbedPane.add("Bar Graph", mypanel);
 	}
-
+	
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
