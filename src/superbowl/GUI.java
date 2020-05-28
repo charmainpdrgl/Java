@@ -1,12 +1,17 @@
 package superbowl;
 
-import java.awt.Component;
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+
+import javax.imageio.ImageIO;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Collections;
 
-import javax.swing.JFrame;
+import javax.swing.*;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.border.EmptyBorder;
@@ -23,7 +28,6 @@ import org.jfree.data.category.DefaultCategoryDataset;
 import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.DefaultComboBoxModel;
@@ -90,6 +94,11 @@ public class GUI extends JFrame implements ActionListener{
 	private JTextField averageText;
 	private JButton statsButton;
 	private JTabbedPane barPane;
+	BufferedImage[] imagesWinner;
+	BufferedImage[] imagesLoser;
+	private int imageCounter= 0;
+	String[] ids = {"67-GBP","68-GBP","69-NYJ","70-KCC","71-BC","72-DC","73-MD","74-MD","75-PS","76-PS","77-OR","78-DC"};
+	String[] ids2 = {"67-KCC","68-OR","69-BC","70-MV","71-DC","72-MD","73-WR","74-MV","75-MV","76-DC","77-MV","78-DB"};
 
 	/**
 	 * This method creates the frame.
@@ -100,6 +109,8 @@ public class GUI extends JFrame implements ActionListener{
 		super("Superbowl");
 		this.events = events;
 		
+		imagesWinner = new BufferedImage[ids.length];
+		imagesLoser = new BufferedImage[ids2.length];
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 1440, 586);
 		contentPane = new JPanel();
@@ -314,11 +325,11 @@ public class GUI extends JFrame implements ActionListener{
 		locationText.setText(events.get(0).getStadium() + ", " + events.get(0).getCity() + ", " + events.get(0).getState());
 		
 		winningTeamLabel = new JLabel("Winning Team");
-		winningTeamLabel.setBounds(420, 89, 135, 16);
+		winningTeamLabel.setBounds(404, 170, 135, 16);
 		teamsPanel.add(winningTeamLabel);
 		
 		losingTeamLabel = new JLabel("Losing Team");
-		losingTeamLabel.setBounds(910, 89, 121, 16);
+		losingTeamLabel.setBounds(894, 170, 121, 16);
 		teamsPanel.add(losingTeamLabel);
 		
 		winnerPanel = new JPanel();
@@ -329,7 +340,7 @@ public class GUI extends JFrame implements ActionListener{
 		winnerPanel.add(winnerPhotoLabel);
 		
 		mvpLabel = new JLabel("MVP");
-		mvpLabel.setBounds(673, 192, 61, 16);
+		mvpLabel.setBounds(657, 273, 61, 16);
 		teamsPanel.add(mvpLabel);
 		
 		loserPanel = new JPanel();
@@ -340,44 +351,44 @@ public class GUI extends JFrame implements ActionListener{
 		loserPanel.add(loserPhotoLabel);
 		
 		nameLabel = new JLabel("Name");
-		nameLabel.setBounds(673, 122, 61, 16);
+		nameLabel.setBounds(657, 203, 61, 16);
 		teamsPanel.add(nameLabel);
 		
 		pointsLabel = new JLabel("Points");
-		pointsLabel.setBounds(673, 159, 61, 16);
+		pointsLabel.setBounds(657, 240, 61, 16);
 		teamsPanel.add(pointsLabel);
 		
 		wNameText = new JTextField();
 		wNameText.setEditable(false);
-		wNameText.setBounds(485, 117, 174, 26);
+		wNameText.setBounds(469, 198, 174, 26);
 		teamsPanel.add(wNameText);
 		wNameText.setColumns(10);
 		wNameText.setText(events.get(0).getWinner());
 		
 		wPointText = new JTextField();
 		wPointText.setEditable(false);
-		wPointText.setBounds(529, 154, 130, 26);
+		wPointText.setBounds(513, 235, 130, 26);
 		teamsPanel.add(wPointText);
 		wPointText.setColumns(10);
 		wPointText.setText(Integer.toString(events.get(0).getWinningPoints()));
 		
 		wMVPText = new JTextField();
 		wMVPText.setEditable(false);
-		wMVPText.setBounds(529, 187, 130, 26);
+		wMVPText.setBounds(513, 268, 130, 26);
 		teamsPanel.add(wMVPText);
 		wMVPText.setColumns(10);
 		wMVPText.setText(events.get(0).getMvp());
 		
 		lNameText = new JTextField();
 		lNameText.setEditable(false);
-		lNameText.setBounds(724, 117, 176, 26);
+		lNameText.setBounds(708, 198, 176, 26);
 		teamsPanel.add(lNameText);
 		lNameText.setColumns(10);
 		lNameText.setText(events.get(0).getLoser());
 		
 		lPointText = new JTextField();
 		lPointText.setEditable(false);
-		lPointText.setBounds(724, 154, 130, 26);
+		lPointText.setBounds(708, 235, 130, 26);
 		teamsPanel.add(lPointText);
 		lPointText.setColumns(10);
 		lPointText.setText(Integer.toString(events.get(0).getLosingPoints()));
@@ -387,6 +398,32 @@ public class GUI extends JFrame implements ActionListener{
 		previousButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				Object[] object = new Object[11];
+				String prefix="winnerPhotos/";
+				String prefix2="loserPhotos/";
+				String path="";
+				String path2="";
+				String ext = ".jpg";
+				for (int i = 0; i < imagesWinner.length;i++)
+				{
+					path = prefix + ids[i] + ext;
+					try {
+						imagesWinner[i] = ImageIO.read(new File(path));
+					} catch (IOException o) {
+						// TODO Auto-generated catch block
+						o.printStackTrace();
+					}
+				}
+				
+				for (int i = 0; i < imagesLoser.length;i++)
+				{
+					path2 = prefix2 + ids2[i] + ext;
+					try {
+						imagesLoser[i] = ImageIO.read(new File(path2));
+					} catch (IOException o) {
+						// TODO Auto-generated catch block
+						o.printStackTrace();
+					}
+				}
 				for (int i=0;i<counter-1;i++)
 				{
 					object[0] = events.get(i).getDate();
@@ -408,6 +445,14 @@ public class GUI extends JFrame implements ActionListener{
 					lPointText.setText(object[5].toString());
 					wMVPText.setText(object[6].toString());
 					locationText.setText(object[7].toString() + ", " + object[8].toString() + ", " + object[9].toString());
+					winnerPhotoLabel.setIcon(new ImageIcon(imagesWinner[imageCounter-1]));
+					loserPhotoLabel.setIcon(new ImageIcon(imagesLoser[imageCounter-1]));
+					
+					imageCounter++;
+					if(imageCounter == 12)
+					{
+						imageCounter= 0+1 ;
+					}
 				}
 				counter--;
 				
@@ -424,7 +469,32 @@ public class GUI extends JFrame implements ActionListener{
 		nextButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				Object[] object = new Object[11];
+				String prefix="winnerPhotos/";
+				String prefix2="loserPhotos/";
+				String path="";
+				String path2="";
+				String ext = ".jpg";
+				for (int i = 0; i < imagesWinner.length;i++)
+				{
+					path = prefix + ids[i] + ext;
+					try {
+						imagesWinner[i] = ImageIO.read(new File(path));
+					} catch (IOException o) {
+						// TODO Auto-generated catch block
+						o.printStackTrace();
+					}
+				}
 				
+				for (int i = 0; i < imagesLoser.length;i++)
+				{
+					path2 = prefix2 + ids2[i] + ext;
+					try {
+						imagesLoser[i] = ImageIO.read(new File(path2));
+					} catch (IOException o) {
+						// TODO Auto-generated catch block
+						o.printStackTrace();
+					}
+				}
 				for (int i=0;i<counter+1;i++)
 				{
 					object[0] = events.get(i).getDate();
@@ -447,7 +517,16 @@ public class GUI extends JFrame implements ActionListener{
 					lPointText.setText(object[5].toString());
 					wMVPText.setText(object[6].toString());
 					locationText.setText(object[7].toString() + ", " + object[8].toString() + ", " + object[9].toString());
+					winnerPhotoLabel.setIcon(new ImageIcon(imagesWinner[imageCounter]));
+					loserPhotoLabel.setIcon(new ImageIcon(imagesLoser[imageCounter]));
+					
+					imageCounter++;
+					if(imageCounter > 11)
+					{
+						imageCounter= 0+1;
+					}
 				}
+				
 				
 				counter++;
 				
